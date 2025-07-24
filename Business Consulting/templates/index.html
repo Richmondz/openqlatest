@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Business Consultants</title>
+</head>
+<body>
+
+{% extends "base.html" %}
+
+{% block content %}
+
+<style>
+    #loading-overlay { pointer-events: none; transition: opacity 0.5s ease-in-out; }
+    .hero-section .text-muted { color: #f8f9fa !important; }
+    #threed-container { height: 60vh; min-height: 450px; }
+    .digital-twin-controls { background-color: var(--bs-body-bg); border: 1px solid var(--bs-border-color); height: 100%; }
+    .chat-history { min-height: 150px; max-height: 40vh; overflow-y: auto; }
+    #twin-chat-card { border-top-left-radius: 0; border-top-right-radius: 0; }
+    #fan-speed-display {
+        font-size: 1.5rem;
+        font-weight: bold;
+        color: var(--bs-info);
+    }
+</style>
+
+    <div class="hero-section text-center p-5 mb-5">
+        <h1 class="display-4 fw-bold mb-3">Elevate Your Business</h1>
+        <p class="lead col-lg-8 mx-auto text-muted">Leverage cutting-edge AI to analyze markets, refine strategies, and drive growth. Our expert AI consultants are here to guide you every step of the way.</p>
+        <a href="#services" class="btn btn-primary btn-lg mt-3">Explore Services</a>
+    </div>
+
+    <div class="container mb-5">
+        <h2 class="text-center mb-4">Featured Visuals: Digital Twin</h2>
+        <div class="row g-4">
+            <div class="col-lg-9">
+                <div id="threed-container" class="w-100 rounded-top shadow-sm overflow-hidden position-relative">
+                    <div id="loading-overlay" class="position-absolute top-0 start-0 w-100 h-100 d-flex justify-content-center align-items-center" style="background-color: var(--surface-color); z-index: 10; opacity: 1;">
+                        <div id="loading-indicator" class="text-center">
+                            <div class="spinner-border" role="status"><span class="visually-hidden">Loading...</span></div>
+                            <p class="mt-2 mb-0 text-muted">Loading Interactive Visual...</p>
+                        </div>
+                    </div>
+                </div>
+                <div id="twin-chat-card" class="card shadow-sm">
+                    <div class="card-body">
+                         <div id="twin-chat-history" class="chat-history mb-2 p-2 border rounded"></div>
+                         <div class="d-flex gap-2">
+                             <textarea id="twin-prompt-input" class="form-control" rows="1" placeholder="e.g., 'make the office colder'"></textarea>
+                             <button class="btn btn-secondary" onclick="sendTwinCommand()">Send</button>
+                         </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3">
+                <div class="digital-twin-controls p-3 rounded shadow-sm text-center">
+                    <h5 class="border-bottom pb-2 mb-3">Manual Control</h5>
+                    <div class="mb-3">
+                        <h6>Fan Speed: <span id="fan-speed-display">1x</span></h6>
+                    </div>
+                    <div class="d-grid gap-2 mb-3">
+                        <button id="increaseFanBtn" class="btn btn-outline-info">Increase Speed</button>
+                        <button id="decreaseFanBtn" class="btn btn-outline-info">Decrease Speed</button>
+                    </div>
+                    <hr>
+                    <h5 class="border-bottom pb-2 mb-3">Live Sensor Data</h5>
+                    <h6>Office Temperature</h6>
+                    <p class="display-5 fw-bold"><span id="temp-display">--</span>&deg;C</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="services" class="container mb-5">
+        <h2 class="text-center mb-4">Our Core Consulting Services</h2>
+        <div class="row g-4">
+             <div class="col-lg-3 col-md-6">
+                <div class="card h-100 service-card" data-service="market_strategy" data-service-name="Market & Growth Strategy" data-ai-greeting="I'm ready to help you formulate a winning market strategy. What are your primary goals or challenges?">
+                    <div class="card-body d-flex flex-column"><h5 class="card-title">Market & Growth Strategy</h5><p class="card-text text-muted flex-grow-1">Develop robust market entry plans, identify growth opportunities, and refine your competitive positioning.</p><button class="btn btn-outline-primary mt-auto consult-button">Consult AI</button></div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6">
+                <div class="card h-100 service-card" data-service="operational_efficiency" data-service-name="Operational Efficiency" data-ai-greeting="Let's optimize your operations! Tell me about your current processes or bottlenecks.">
+                    <div class="card-body d-flex flex-column"><h5 class="card-title">Operational Efficiency</h5><p class="card-text text-muted flex-grow-1">Streamline processes, reduce costs, and enhance productivity by leveraging AI insights for operational excellence.</p><button class="btn btn-outline-primary mt-auto consult-button">Consult AI</button></div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6">
+                <div class="card h-100 service-card" data-service="digital_transformation" data-service-name="Digital Transformation" data-ai-greeting="Embarking on a digital transformation? Let's discuss your vision and how AI can accelerate it.">
+                    <div class="card-body d-flex flex-column"><h5 class="card-title">Digital Transformation</h5><p class="card-text text-muted flex-grow-1">Navigate the complexities of digital change and implement data-driven solutions to future-proof your business.</p><button class="btn btn-outline-primary mt-auto consult-button">Consult AI</button></div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6">
+                <div class="card h-100 service-card" data-service="startup_advisory" data-service-name="Startup Advisory" data-ai-greeting="Launching a startup? I can help with business plans, funding strategies, and early-stage growth. What's on your mind?">
+                    <div class="card-body d-flex flex-column"><h5 class="card-title">Startup Advisory</h5><p class="card-text text-muted flex-grow-1">Get tailored advice for your startup journey, from ideation and business planning to securing funding and scaling.</p><button class="btn btn-outline-primary mt-auto consult-button">Consult AI</button></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="consultantModal" tabindex="-1" aria-labelledby="consultantModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="consultantModalLabel">AI Consulting Session</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <div id="consultant-chat-history" class="chat-history mb-3 p-2 border rounded"></div>
+            <div class="d-flex gap-2">
+                <textarea id="consultant-prompt-input" class="form-control" rows="1" placeholder="Ask a question..."></textarea>
+                <button class="btn btn-primary" onclick="sendConsultantMessage()">Send</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+{% endblock content %}
+
+
+{% block scripts %}
+    <script>
+        // --- Global Variables ---
+        const flaskServerBaseUrl = "";
+        const isAuthenticated = {{ current_user.is_authenticated|tojson }};
+        const twinChatHistoryDiv = document.getElementById("twin-chat-history");
+        const twinPromptInput = document.getElementById("twin-prompt-input");
+        let viewer;
+        
+        // RESTORED: Variables for consultant chat
+        let consultantModal;
+        let currentConsultantContext = null;
+
+        // --- Simulation State Management ---
+        const simulation = {
+            baseTemperature: 23.0,
+            currentTemperature: 23.0,
+            fanSpeedLevel: 1,
+            maxFanSpeed: 50,
+            minFanSpeed: 1,
+            tempEffectPerLevel: -0.15
+        };
+
+        // --- UI & Chat Functions ---
+        function appendMessage(text, senderType, chatHistoryDiv) {
+            const messageDiv = document.createElement("div");
+            const baseClasses = ["message", "p-2", "rounded", "mb-2", "mw-75"];
+            const typeClasses = (senderType === 'user' ? 'user-message bg-primary text-white ms-auto' : 'ai-message bg-body-secondary me-auto').split(' ');
+            messageDiv.classList.add(...baseClasses, ...typeClasses);
+            const p = document.createElement("p");
+            p.classList.add('m-0');
+            p.innerHTML = text;
+            messageDiv.appendChild(p);
+            chatHistoryDiv.appendChild(messageDiv);
+            chatHistoryDiv.scrollTop = chatHistoryDiv.scrollHeight;
+            return messageDiv;
+        }
+
+        // --- Central Simulation Logic ---
+        function updateFanSpeed(direction) {
+            if (!viewer) return;
+
+            if (direction === 'increase') {
+                simulation.fanSpeedLevel = Math.min(simulation.fanSpeedLevel + 1, simulation.maxFanSpeed);
+            } else if (direction === 'decrease') {
+                simulation.fanSpeedLevel = Math.max(simulation.fanSpeedLevel - 1, simulation.minFanSpeed);
+            }
+
+            viewer.clock.multiplier = simulation.fanSpeedLevel;
+            const tempOffset = (simulation.fanSpeedLevel - 1) * simulation.tempEffectPerLevel;
+            simulation.currentTemperature = simulation.baseTemperature + tempOffset;
+            
+            document.getElementById('temp-display').textContent = simulation.currentTemperature.toFixed(1);
+            document.getElementById('fan-speed-display').textContent = `${simulation.fanSpeedLevel}x`;
+        }
+        
+        async function sendTwinCommand() {
+             if (!isAuthenticated) return;
+             const promptText = twinPromptInput.value.trim();
+             if (!promptText) return;
+             appendMessage(promptText, 'user', twinChatHistoryDiv);
+             twinPromptInput.value = '';
+             const aiMessageDiv = appendMessage("<em>...</em>", "ai", twinChatHistoryDiv);
+             try {
+                const response = await fetch(`${flaskServerBaseUrl}/api/ask`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ prompt: promptText, service_context: 'digital_twin' }),
+                });
+                if (!response.ok) throw new Error(`Server error: ${response.status}`);
+                const data = await response.json();
+                aiMessageDiv.querySelector("p").innerHTML = data.message;
+                if (data.action === 'increase_fan_speed') {
+                    updateFanSpeed('increase');
+                } else if (data.action === 'decrease_fan_speed') {
+                    updateFanSpeed('decrease');
+                }
+             } catch (error) {
+                aiMessageDiv.querySelector("p").innerHTML = `<em>Error: ${error.message}</em>`;
+             }
+        }
+
+        // --- RESTORED: Functions for consultant chat ---
+        function openConsultantChat(serviceCard) {
+            if (!isAuthenticated) {
+                window.location.href = "{{ url_for('auth_bp.login') }}";
+                return;
+            }
+            const consultantModalLabel = document.getElementById("consultantModalLabel");
+            const consultantChatHistoryDiv = document.getElementById("consultant-chat-history");
+            const consultantPromptInput = document.getElementById("consultant-prompt-input");
+            currentConsultantContext = serviceCard.dataset.service;
+            consultantModalLabel.textContent = `AI Consultation: ${serviceCard.dataset.serviceName}`;
+            consultantChatHistoryDiv.innerHTML = '';
+            appendMessage(serviceCard.dataset.aiGreeting, 'ai', consultantChatHistoryDiv);
+            consultantPromptInput.placeholder = `Ask about ${serviceCard.dataset.serviceName}...`;
+            consultantModal.show();
+        }
+
+        async function sendConsultantMessage() {
+            // Placeholder for consultant AI logic
+        }
+
+        // --- Main Cesium Initialization ---
+        async function initCesiumViewer() {
+            const loadingOverlay = document.getElementById('loading-overlay');
+            try {
+                Cesium.Ion.defaultAccessToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiIzOTkyZGY0Yy03NzAxLTQ3MDItODY5ZC03NzNkZGY1ODkxNjMiLCJpZCI6MzE4MDY4LCJpYXQiOjE3NTIyODcwNDh9.nrpBMS23wjEJsUOJEpH_Df4LArBmSuYugQdaPT5Fi3k';
+                
+                viewer = new Cesium.Viewer('threed-container', {
+                    imageryProvider: false, terrainProvider: undefined, animation: false, timeline: false,
+                    geocoder: false, homeButton: false, sceneModePicker: false, baseLayerPicker: false,
+                    navigationHelpButton: false, infoBox: false, selectionIndicator: false
+                });
+
+                viewer.cesiumWidget.creditContainer.style.display = "none";
+                viewer.scene.globe.show = false;
+                viewer.scene.skyBox.show = false;
+                viewer.scene.skyAtmosphere.show = false;
+                viewer.scene.backgroundColor = Cesium.Color.BLACK;
+
+                const resource = await Cesium.IonResource.fromAssetId(3512427);
+                const entity = viewer.entities.add({
+                    position: Cesium.Cartesian3.fromDegrees(-75.1652, 39.9526, 0),
+                    model: { uri: resource, minimumPixelSize: 128 },
+                });
+                
+                viewer.clock.shouldAnimate = true;
+                
+                await viewer.flyTo(entity);
+                loadingOverlay.style.opacity = '0';
+                
+                appendMessage("Digital twin online. Control the fan speed to affect the office temperature.", "ai", twinChatHistoryDiv);
+                updateFanSpeed();
+
+            } catch (error) {
+                console.error('CRITICAL: A fatal error occurred during Cesium initialization.', error);
+                loadingOverlay.innerHTML = `<p class="text-danger p-3">Error loading 3D visual.</p>`;
+            }
+        }
+
+        // --- Page Load Execution ---
+        document.addEventListener('DOMContentLoaded', () => {
+            initCesiumViewer();
+
+            document.getElementById('increaseFanBtn').addEventListener('click', () => updateFanSpeed('increase'));
+            document.getElementById('decreaseFanBtn').addEventListener('click', () => updateFanSpeed('decrease'));
+            twinPromptInput.addEventListener("keypress", (e) => { 
+                if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); sendTwinCommand(); }
+            });
+            
+            // --- RESTORED: Event listeners for consultant chat ---
+            consultantModal = new bootstrap.Modal(document.getElementById('consultantModal'));
+            document.querySelectorAll('.consult-button').forEach(button => {
+                button.addEventListener('click', (event) => {
+                    openConsultantChat(event.target.closest('.service-card'));
+                });
+            });
+        });
+    </script>
+{% endblock scripts %}
+
+</body>
+</html>

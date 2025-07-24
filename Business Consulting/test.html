@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Cesium Minimal Test</title>
+  <link href="https://cesium.com/downloads/cesiumjs/releases/1.118/Build/Cesium/Widgets/widgets.css" rel="stylesheet">
+  <style>
+    html, body, #cesiumContainer {
+      width: 100%; height: 100%; margin: 0; padding: 0; overflow: hidden;
+    }
+  </style>
+</head>
+<body>
+  <div id="cesiumContainer"></div>
+
+  <script src="https://cesium.com/downloads/cesiumjs/releases/1.118/Build/Cesium/Cesium.js"></script>
+
+  <script>
+    // 3. Use your token here
+    Cesium.Ion.defaultAccessToken = 'YOUR_CESIUM_ION_TOKEN_HERE';
+
+    // 4. Minimal code to create a viewer
+    const viewer = new Cesium.Viewer('cesiumContainer', {
+      infoBox: false,
+      selectionIndicator: false,
+      timeline: false,
+      animation: false
+    });
+
+    // 5. Minimal code to load the model
+    try {
+      console.log("Attempting to load asset 3512427...");
+      const officeEntity = viewer.entities.add({
+        position: Cesium.Cartesian3.fromDegrees(-75.1652, 39.9526, 0),
+        model: {
+          uri: Cesium.IonResource.fromAssetId(3512427)
+        },
+      });
+      viewer.trackedEntity = officeEntity;
+      console.log("SUCCESS: Entity added. If the model does not appear, the issue is with asset loading (permissions) or your local environment (graphics/network).");
+    } catch (error) {
+      console.error("CRITICAL ERROR:", error);
+    }
+  </script>
+</body>
+</html>
